@@ -28,7 +28,12 @@ export default function Dashboard() {
       
       try {
         const res = await api.get(`/api/dashboard/${sessionId}`);
-        setData(res.data);
+        // Backend response shape: { success: true, data: { ... } }
+        if (res.data?.success && res.data?.data) {
+          setData(res.data.data);
+        } else {
+          setError("Unexpected response from server.");
+        }
       } catch (err) {
         console.error(err);
         setError("Failed to fetch dashboard data. Make sure backend is running on :5000");
@@ -74,7 +79,11 @@ export default function Dashboard() {
         </div>
         
         <div className="animate-fade-in animate-slide-up delay-100">
-          <HealthScore score={data.healthScore} label={data.healthLabel} />
+          {/* Backend returns healthScore as { score: Number, label: String } */}
+          <HealthScore 
+            score={data.healthScore?.score ?? 100} 
+            label={data.healthScore?.label ?? 'Excellent'} 
+          />
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6 animate-fade-in animate-slide-up delay-200">
@@ -125,3 +134,4 @@ export default function Dashboard() {
     </div>
   );
 }
+
