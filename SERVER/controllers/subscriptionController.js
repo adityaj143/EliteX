@@ -19,6 +19,7 @@ exports.manualSubscriptions = async (req, res, next) => {
       isRecurring: true
     }));
 
+    await Subscription.deleteMany({ sessionId });
     const result = await Subscription.insertMany(newSubscriptions);
     res.json({ success: true, count: result.length });
   } catch (error) {
@@ -82,6 +83,8 @@ exports.csvSubscriptions = async (req, res, next) => {
             };
           }).filter(sub => sub.merchantName && !isNaN(sub.amount));
           
+          // Purge old dashboard data for this session to give a clean CSV view
+          await Subscription.deleteMany({ sessionId });
           const savedDocs = await Subscription.insertMany(newSubscriptions);
           
           res.json({ 

@@ -23,8 +23,12 @@ exports.getDashboard = async (req, res, next) => {
       // Basic metrics
       totalMonthly += sub.amount;
       
-      if (sub.category && byCategory[sub.category] !== undefined) {
-        byCategory[sub.category] += sub.amount;
+      if (sub.category) {
+        if (byCategory[sub.category] !== undefined) {
+          byCategory[sub.category] += sub.amount;
+        } else {
+          byCategory['Other'] += sub.amount;
+        }
       }
       
       // Health Score & Priority

@@ -14,12 +14,10 @@ const subscriptionSchema = new mongoose.Schema({
     required: true
   },
   category: {
-    type: String,
-    enum: ["Entertainment", "Utilities", "Health", "Software", "Food", "Other"]
+    type: String
   },
   usageFrequency: {
-    type: String,
-    enum: ["rarely", "sometimes", "daily"]
+    type: String
   },
   dateStarted: {
     type: Date
